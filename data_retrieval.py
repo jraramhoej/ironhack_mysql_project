@@ -1,18 +1,17 @@
 from switchup_schools import schools
 import re
-import pandas as pd
 import requests
-from datetime import datetime
+import pandas as pd
 import numpy as np
+from datetime import datetime
 from nltk.corpus import stopwords
 stop = stopwords.words('english')
 
-# define subset of schools
-schools = {
-    'ironhack': schools["ironhack"],
-    'app-academy': schools["app-academy"],
-    'springboard': schools["springboard"]
-}
+# chosen schools from the Iberian peninsula
+chosen_schools = ["ironhack", "app-academy", "springboard"]
+
+# create dictionary with the subset of schools
+schools = {key: schools[key] for key in chosen_schools}
 
 def get_comments_school(school):
 
@@ -42,7 +41,7 @@ def generate_school_dfs():
     reviews = pd.concat([get_comments_school(school) for school in schools.keys()])
 
     # replace NaN with None
-    reviews = reviews.replace(np.nan, None, regex=True)
+    reviews = reviews.replace(np.nan, None)
 
     # Change datetime format of createdAt column to YYYY-MM-DD
     reviews["createdAt"] = pd.to_datetime(reviews["createdAt"]).dt.strftime('%Y-%m-%d')
@@ -63,24 +62,8 @@ def generate_school_dfs():
     reviews["review_body"] = reviews["review_body"].apply(clean_quotes)
     reviews["name"] = reviews["name"].apply(clean_quotes)
     reviews["tagline"] = reviews["tagline"].apply(clean_quotes)
+    reviews["program"] = reviews["program"].apply(clean_quotes)
+    reviews["jobTitle"] = reviews["jobTitle"].apply(clean_quotes)
 
-    # Remove punctuation and special characters in review_body
-    reviews["review_body"] = reviews["review_body"].replace("[.!?\\-:,;/]", "", regex=True)
-
-    # create words dataframe
-
-    # function to split review_body and create dicts with wordlists and review_id
-    def split_text(row):
-        return {"word": [word.lower() for word in row["review_body"].split() if word.lower() not in stop], "review_id": row["id"]}
-
-    # apply split_texts to the dataframe
-    words = reviews.apply(split_text, axis=1)
-
-    # Create new data frame
-    words = pd.DataFrame(list(words))
-
-    # explode lists into new rows
-    words = words['word'].apply(lambda x: pd.Series(x)).stack().reset_index(level=1, drop=True).to_frame('word').join(words[['review_id']], how='left')
-
-    return {"reviews": reviews, "words": words}
+    return reviews
 
