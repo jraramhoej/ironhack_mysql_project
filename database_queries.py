@@ -1,9 +1,9 @@
 # create new database
-create_database = """CREATE DATABASE switchup;"""
+create_database = """CREATE DATABASE switchup3;"""
 
 # create reviews table
 create_reviews = """CREATE TABLE IF NOT EXISTS
-switchup.reviews(
+switchup3.reviews(
 id INT PRIMARY KEY AUTO_INCREMENT,
 review_id INT NOT NULL UNIQUE,
 tagline TEXT,
@@ -24,15 +24,8 @@ review_id INT NOT NULL,
 student_name VARCHAR(50),
 graduating_year YEAR,
 is_alumni BOOLEAN,
-job_title TEXT,
-program VARCHAR(50),
-school_name VARCHAR(50),
+job_title VARCHAR(200),
+program VARCHAR(200),
+school_name VARCHAR(200),
 FOREIGN KEY (review_id) REFERENCES reviews(review_id));"""
 
-# create words table
-create_words = """CREATE TABLE IF NOT EXISTS
-switchup.words(
-id INT PRIMARY KEY AUTO_INCREMENT,
-review_id INT NOT NULL,
-word TEXT,
-FOREIGN KEY (review_id) REFERENCES reviews(review_id));"""

@@ -7,8 +7,7 @@ import database_queries
 if __name__ == '__main__':
 
     # dataframes
-    reviews = data_retrieval.generate_school_dfs()["reviews"]
-    words = data_retrieval.generate_school_dfs()["words"]
+    reviews = data_retrieval.generate_school_dfs()
 
     # create database
     create_mysql_database.sql_action(database_queries.create_database)
@@ -16,7 +15,6 @@ if __name__ == '__main__':
     # create tables
     create_mysql_database.sql_action(database_queries.create_reviews)
     create_mysql_database.sql_action(database_queries.create_students)
-    create_mysql_database.sql_action(database_queries.create_words)
 
     # populate tables
 
@@ -24,7 +22,7 @@ if __name__ == '__main__':
     for review_id, tagline, created_at, years_since_graduation, overall_score, overall, curriculum, job_support, review_body, school in zip(reviews["id"], reviews["tagline"], reviews["createdAt"], reviews["years_since_graduation"], reviews["overallScore"], reviews["overall"], reviews["curriculum"], reviews["jobSupport"], reviews["review_body"], reviews["school"]):
 
         # define query
-        query = "INSERT INTO switchup.reviews(review_id, tagline, created_at, years_since_graduation,overall_score, overall, curriculum, job_support, review_body, school_name) VALUES(" + \
+        query = "INSERT INTO switchup3.reviews(review_id, tagline, created_at, years_since_graduation,overall_score, overall, curriculum, job_support, review_body, school_name) VALUES(" + \
         str(review_id) + ", \"" + \
         str(tagline) + "\", " + \
         "STR_TO_DATE(\"" + str(created_at) + "\", \"%Y-%m-%d\"), " + \
@@ -43,7 +41,7 @@ if __name__ == '__main__':
     for review_id, name, graduating_year, is_alumni, job_title, program, school in zip(reviews["id"], reviews["name"], reviews["graduatingYear"], reviews["isAlumni"], reviews["jobTitle"], reviews["program"], reviews["school"]):
 
         # define query
-        query = "INSERT INTO switchup.students(review_id, student_name, graduating_year, is_alumni, job_title, program, school_name) VALUES(" + \
+        query = "INSERT INTO switchup3.students(review_id, student_name, graduating_year, is_alumni, job_title, program, school_name) VALUES(" + \
         str(review_id) + ", \"" + \
         str(name) + "\", " + \
         str(graduating_year) + ", " + \
@@ -55,13 +53,3 @@ if __name__ == '__main__':
         # execute query
         create_mysql_database.sql_action(query)
 
-    # words
-    for word, review_id in zip(words["word"], words["review_id"]):
-
-        # define query
-        query = "INSERT INTO switchup.words(word, review_id) VALUES(\"" + \
-        str(word) + "\", " + \
-        str(review_id) + ");"
-
-        # execute query
-        create_mysql_database.sql_action(query)
