@@ -3,8 +3,8 @@ import mysql.connector
 def sql_action(query):
 
     # establish connection to a database
-    connection = mysql.connector.connect(user='root', password='18Rj7192!', host='localhost', database='sakila',
-                                         auth_plugin='mysql_native_password')
+    connection = mysql.connector.connect(user='X', password='X!', host='X', database='X',
+                                         auth_plugin='X')
 
     # try / except (or if statement) to check if connected
     if connection.is_connected():
